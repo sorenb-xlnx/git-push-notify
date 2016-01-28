@@ -108,6 +108,16 @@ if args.debug or args.verbose:
 revlist = repo.walk(rev_end.oid, pygit2.GIT_SORT_TOPOLOGICAL | pygit2.GIT_SORT_REVERSE)
 revlist.hide(rev_start.oid)
 
+# Push to remotes
+# (can't figure out how to do this using pygit2)
+for remote in args.remote:
+    push_cmd = ["git", "push", remote, str(rev_end.oid) + ":master"]
+
+    if not args.dry_run:
+        subprocess.run(push_cmd, check=True)
+    else:
+        print("Dry-run: Would push: {}".format(" ".join(push_cmd)))
+
 # Acknowledge each commit by email
 charset.add_charset('utf-8', charset.QP, charset.QP, 'utf-8')
 commit = None
@@ -144,13 +154,3 @@ for commit in revlist:
 if not commit:
     print("Empty commit range. Exiting")
     sys.exit(0)
-
-# Push to remotes
-# (can't figure out how to do this using pygit2)
-for remote in args.remote:
-    push_cmd = ["git", "push", remote, str(rev_end.oid) + ":master"]
-
-    if not args.dry_run:
-        subprocess.run(push_cmd, check=True)
-    else:
-        print("Dry-run: Would push: {}".format(" ".join(push_cmd)))
