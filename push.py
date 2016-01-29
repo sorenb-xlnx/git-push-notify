@@ -122,7 +122,7 @@ for remote in args.remote:
 charset.add_charset('utf-8', charset.QP, charset.QP, 'utf-8')
 commit = None
 for commit in revlist:
-    subject = commit.message.split('\n', 1)[0] + " added to " + tree_name
+    subject = commit.message.split('\n', 1)[0]
     body = make_email(repo, commit, tree_name, subject)
     if args.debug:
         print(body)
@@ -136,6 +136,7 @@ for commit in revlist:
     if args.debug:
         print("To: ", to)
 
+    subject += " added to " + tree_name
     msg = MIMEText(body.encode('utf-8'), 'plain', 'utf-8')
     msg["From"] = Header("Sören Brinkmann", "utf-8")
     msg["From"].append(" <soren.brinkmann@xilinx.com>", 'us-ascii')
