@@ -31,7 +31,7 @@ This is a note to let you know that I've just added the patch titled
 
     {subject}
 
-to my {tree} git tree which can be found at
+to my {tree} Git tree which can be found at
     {url}
 in the master branch.
 
