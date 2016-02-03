@@ -127,12 +127,14 @@ for commit in revlist:
     if args.debug:
         print(body)
 
-    to = commit.author.email
+    to = [commit.author.email]
     for line in commit.message.split('\n'):
         m = re_email.search(line);
         if m and  m.groups:
-            to += ", " + m.groups()[0]
+            to.append(m.groups()[0])
 
+    # convert to set which removes dups too
+    to = set(to)
     if args.debug:
         print("To: ", to)
 
@@ -141,7 +143,7 @@ for commit in revlist:
     msg["From"] = Header("Sören Brinkmann", "utf-8")
     msg["From"].append(" <soren.brinkmann@xilinx.com>", 'us-ascii')
     msg["Subject"] = Header(subject, "utf-8")
-    msg["To"] = Header(to, "us-ascii")
+    msg["To"] = Header(", ".join(to), "us-ascii")
 
     if args.debug or args.verbose > 1:
         print(msg.as_bytes().decode(encoding='utf-8'))
