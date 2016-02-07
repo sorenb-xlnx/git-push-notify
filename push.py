@@ -82,16 +82,14 @@ if args.dry_run:
     print("Dry-run: Not sending email. Not pushing any revs.")
 
 if args.force == 1 and args.branch == 'master':
-    print("ERROR: force push to master branch not allowed", file=sys.stderr)
-    sys.exit(1)
+    raise ValueError("force push to master branch not allowed")
 
 tree_name = os.path.basename(os.getcwd())
 if tree_name.endswith('.git'):
     tree_name = tree_name[:-4]
 
 if not tree_name in tree_urls:
-    print("ERROR: invalid tree '{}'".format(tree_name), file=sys.stderr)
-    sys.exit(1)
+    raise ValueError("invalid tree '{}'".format(tree_name))
 
 if args.debug or args.verbose:
     print("tree URL: {}".format(tree_urls[tree_name]), file=sys.stderr)
