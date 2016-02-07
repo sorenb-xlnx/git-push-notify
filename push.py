@@ -68,6 +68,7 @@ parser.add_argument('rev_start', metavar="<rev_start>", help="start revision")
 parser.add_argument('rev_end', metavar="<rev_end>", nargs='?', default='HEAD', help="end revision")
 parser.add_argument('--repo', '-repo', action='append', dest='remote', help="remote repository(s) to push to")
 parser.add_argument('--branch', '-branch', help="branch to push to")
+parser.add_argument('--cc', '-cc', action='append', help="additional recipients for email notifications")
 parser.add_argument('--dry-run', '-dry-run', action='store_true', default=False, help="do not actually push or notify")
 parser.add_argument('--config', '-config', default='~/.pushrc', help="config file (~/.pushrc)")
 parser.add_argument('--verbose', '-verbose', action='count', default=0, help="increase verbosity")
@@ -122,6 +123,12 @@ if not args.debug:
 cc = [from_email]
 if config.has_option(tree_name, 'cc'):
     cc += config.get(tree_name, 'cc').split()
+if args.cc:
+    cc += args.cc
+cc = set(cc)
+
+if args.debug:
+    print("Cc: ", cc)
 
 if args.debug or args.verbose:
     print("tree URL: {}".format(config[tree_name]['url']), file=sys.stderr)
