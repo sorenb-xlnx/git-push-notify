@@ -6,6 +6,7 @@
     url = "https://github.com/<user>/<git-tree>"	# URL for repo web view
     remotes = origin xilpub				# optional: push locations (origin)
     branch = myBranch					# optional: branch to push to (master)
+    cc = co-maintainer@company.com manager@company.com	# optional: additional notification recipients
 
 [core]
     abbrev = 12						# optional: shorten hashes (12)

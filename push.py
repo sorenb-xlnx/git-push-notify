@@ -118,6 +118,11 @@ if args.force == 1 and destination_branch == 'master':
 if not args.debug:
     SHA_LEN = config.getint('core', 'abbrev', fallback=12)
 
+# assemble CC list
+cc = [from_email]
+if config.has_option(tree_name, 'cc'):
+    cc += config.get(tree_name, 'cc').split()
+
 if args.debug or args.verbose:
     print("tree URL: {}".format(config[tree_name]['url']), file=sys.stderr)
 
@@ -179,7 +184,7 @@ for commit in revlist:
     msg["From"].append(" <{}>".format(from_email), 'us-ascii')
     msg["Subject"] = Header('patch "{}" added to {}'.format(subject, tree_name), "utf-8")
     msg["To"] = Header(", ".join(to), "us-ascii")
-    msg["Cc"] = Header(from_email, "us-ascii")
+    msg["Cc"] = Header(", ".join(cc), "us-ascii")
 
     if args.debug or args.verbose > 1:
         print(msg.as_bytes().decode(encoding='utf-8'))
