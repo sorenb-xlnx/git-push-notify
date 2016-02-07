@@ -60,7 +60,7 @@ URL:        {url}/commit/{sha}
 parser = argparse.ArgumentParser(description = "Git push helper")
 parser.add_argument('rev_start', metavar="<rev_start>", help="start revision")
 parser.add_argument('rev_end', metavar="<rev_end>", nargs='?', default='HEAD', help="end revision")
-parser.add_argument('--remote', '-remote', action='append', help="remote(s) to push to")
+parser.add_argument('--repo', '-repo', action='append', dest='remote', help="remote repository(s) to push to")
 parser.add_argument('--dry-run', '-dry-run', action='store_true', default=False, help="do not actually push or notify")
 parser.add_argument('--verbose', '-verbose', action='count', default=0, help="increase verbosity")
 parser.add_argument('--debug', '-debug', action='store_true', default=False, help="enable debug messages")
