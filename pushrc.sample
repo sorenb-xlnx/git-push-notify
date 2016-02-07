@@ -1,0 +1,11 @@
+[user]
+    name = Jane Doe
+    email = jane.doe@company.com
+
+[<git-tree>]
+    url = "https://github.com/<user>/<git-tree>"	# URL for repo web view
+    remotes = origin xilpub				# optional: push locations (origin)
+    branch = myBranch					# optional: branch to push to (master)
+
+[core]
+    abbrev = 12						# optional: shorten hashes (12)
