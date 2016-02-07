@@ -21,7 +21,7 @@ is used to parse the configuration file. The general configuration file syntax
 is:
 ```
 [<section>]
-    <key>: <value>
+    <key> = <value>
 ```
 
 ### Required Configuration
