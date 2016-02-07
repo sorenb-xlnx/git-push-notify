@@ -138,11 +138,10 @@ for commit in revlist:
     if args.debug:
         print("To: ", to)
 
-    subject += " added to " + tree_name
     msg = MIMEText(body.encode('utf-8'), 'plain', 'utf-8')
     msg["From"] = Header("Sören Brinkmann", "utf-8")
     msg["From"].append(" <soren.brinkmann@xilinx.com>", 'us-ascii')
-    msg["Subject"] = Header(subject, "utf-8")
+    msg["Subject"] = Header('patch "{}" added to {}'.format(subject, tree_name), "utf-8")
     msg["To"] = Header(", ".join(to), "us-ascii")
 
     if args.debug or args.verbose > 1:
