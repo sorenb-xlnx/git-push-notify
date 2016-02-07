@@ -21,6 +21,14 @@ from email.header import Header
 re_email = re.compile(r"<([^@]+@[^@]+\.[^@]+)>")
 
 def make_email(repo, commit, tree_name, branch, subject):
+    """Create email body from template
+    Keyword arguments:
+    repo -- Repository object
+    commit -- Commit object
+    tree_name -- Name of the Git tree
+    branch -- Branch which is pushed to
+    subject -- Patch subject
+    """
     diff = repo.diff(str(commit.parent_ids[0]), str(commit.oid))
 
     msg = '''
