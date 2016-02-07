@@ -23,7 +23,7 @@ tree_urls = {
 re_email = re.compile(r"<([^@]+@[^@]+\.[^@]+)>")
 SHA_LEN = 12
 
-def make_email(repo, commit, tree_name, subject):
+def make_email(repo, commit, tree_name, branch, subject):
     diff = repo.diff(str(commit.parent_ids[0]), str(commit.oid))
 
     msg = '''
@@ -33,7 +33,7 @@ This is a note to let you know that I've just added the patch titled
 
 to my {tree} Git tree which can be found at
     {url}
-in the master branch.
+in the {branch} branch.
 
 Commit-ID:  {sha}
 Author:     {authorname} <{authormail}>
@@ -51,7 +51,7 @@ URL:        {url}/commit/{sha}
            adate=time.strftime('%F %T %z', time.localtime(commit.author.time)),
            committername=commit.committer.name, committermail=commit.committer.email,
            cdate=time.strftime('%F %T %z', time.localtime(commit.committer.time)),
-           cmsg=commit.message.rstrip(), patch=diff.patch.rstrip(),
+           cmsg=commit.message.rstrip(), patch=diff.patch.rstrip(), branch=branch,
            diffstats=diff.stats.format(pygit2.GIT_DIFF_STATS_FULL, 74).rstrip())
 
     return msg
@@ -61,6 +61,7 @@ parser = argparse.ArgumentParser(description = "Git push helper")
 parser.add_argument('rev_start', metavar="<rev_start>", help="start revision")
 parser.add_argument('rev_end', metavar="<rev_end>", nargs='?', default='HEAD', help="end revision")
 parser.add_argument('--repo', '-repo', action='append', dest='remote', help="remote repository(s) to push to")
+parser.add_argument('--branch', '-branch', default='master', help="branch to push to")
 parser.add_argument('--dry-run', '-dry-run', action='store_true', default=False, help="do not actually push or notify")
 parser.add_argument('--verbose', '-verbose', action='count', default=0, help="increase verbosity")
 parser.add_argument('--debug', '-debug', action='store_true', default=False, help="enable debug messages")
@@ -72,6 +73,7 @@ if args.debug:
     print("  dry-run: {}".format(args.dry_run), file=sys.stderr)
     print("  verbose: {}".format(args.verbose), file=sys.stderr)
     print("  remote: {}".format(args.remote), file=sys.stderr)
+    print("  branch: {}".format(args.branch), file=sys.stderr)
     print("  rev_start: {}".format(args.rev_start), file=sys.stderr)
     print("  rev_end: {}".format(args.rev_end), file=sys.stderr)
 
@@ -111,7 +113,7 @@ revlist.hide(rev_start.oid)
 # Push to remotes
 # (can't figure out how to do this using pygit2)
 for remote in args.remote:
-    push_cmd = ["git", "push", remote, str(rev_end.oid) + ":master"]
+    push_cmd = ["git", "push", remote, str(rev_end.oid) + ":" + args.branch]
 
     if not args.dry_run:
         subprocess.run(push_cmd, check=True)
@@ -123,7 +125,7 @@ charset.add_charset('utf-8', charset.QP, charset.QP, 'utf-8')
 commit = None
 for commit in revlist:
     subject = commit.message.split('\n', 1)[0]
-    body = make_email(repo, commit, tree_name, subject)
+    body = make_email(repo, commit, tree_name, args.branch, subject)
     if args.debug:
         print(body)
 
