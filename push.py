@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+# "THE BEER-WARE LICENSE" (Revision 42):
+# Sören Brinkmann <soren.brinkmann@xilinx.com> wrote this file. As long as you
+# retain this notice you can do whatever you want with this stuff. If we meet
+# some day, and you think this stuff is worth it, you can buy me a beer in
+# return Sören Brinkmann
+
 import argparse
 import configparser
 import os
