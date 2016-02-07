@@ -36,6 +36,7 @@ URL:        {url}/commit/{sha}
 {cmsg}
 ---
 {diffstats}
+
 {patch}
 '''.format(subject=subject, tree=tree_name, url=config[tree_name]['url'], sha=commit.oid,
            authorname=commit.author.name, authormail=commit.author.email,
