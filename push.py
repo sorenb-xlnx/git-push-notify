@@ -179,6 +179,7 @@ for commit in revlist:
     msg["From"].append(" <{}>".format(from_email), 'us-ascii')
     msg["Subject"] = Header('patch "{}" added to {}'.format(subject, tree_name), "utf-8")
     msg["To"] = Header(", ".join(to), "us-ascii")
+    msg["Cc"] = Header(from_email, "us-ascii")
 
     if args.debug or args.verbose > 1:
         print(msg.as_bytes().decode(encoding='utf-8'))
