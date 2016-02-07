@@ -107,8 +107,10 @@ if args.debug or args.verbose:
     print("tree URL: {}".format(config[tree_name]['url']), file=sys.stderr)
 
 if not args.remote:
-    print("No remote specified. Using 'origin'")
-    args.remote = ['origin']
+    if config.has_option(tree_name, 'remotes'):
+        args.remote = config.get(tree_name, 'remotes').split()
+    else:
+        args.remote = ['origin']
 
 # open the Git repo
 repo = pygit2.Repository(pygit2.discover_repository(os.getcwd()))
