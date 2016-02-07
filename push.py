@@ -64,6 +64,7 @@ parser.add_argument('--repo', '-repo', action='append', dest='remote', help="rem
 parser.add_argument('--branch', '-branch', default='master', help="branch to push to")
 parser.add_argument('--dry-run', '-dry-run', action='store_true', default=False, help="do not actually push or notify")
 parser.add_argument('--verbose', '-verbose', action='count', default=0, help="increase verbosity")
+parser.add_argument('--force', '-force', action='count', default=0, help="force push")
 parser.add_argument('--debug', '-debug', action='store_true', default=False, help="enable debug messages")
 args = parser.parse_args()
 
@@ -79,6 +80,10 @@ if args.debug:
 
 if args.dry_run:
     print("Dry-run: Not sending email. Not pushing any revs.")
+
+if args.force == 1 and args.branch == 'master':
+    print("ERROR: force push to master branch not allowed", file=sys.stderr)
+    sys.exit(1)
 
 tree_name = os.path.basename(os.getcwd())
 if tree_name.endswith('.git'):
@@ -114,6 +119,8 @@ revlist.hide(rev_start.oid)
 # (can't figure out how to do this using pygit2)
 for remote in args.remote:
     push_cmd = ["git", "push", remote, str(rev_end.oid) + ":" + args.branch]
+    if args.force:
+        push_cmd.append('--force')
 
     if not args.dry_run:
         subprocess.run(push_cmd, check=True)
