@@ -18,6 +18,7 @@ from email import charset
 from email.mime.text import MIMEText
 from email.header import Header
 
+re_cc = re.compile(r"[Cc]{2}:\s*([^@]+@[^@]+\.[^@]+)")
 re_email = re.compile(r"<([^@]+@[^@]+\.[^@]+)>")
 
 def make_email(repo, commit, tree_name, branch, subject):
@@ -125,10 +126,6 @@ if config.has_option(tree_name, 'cc'):
     cc += config.get(tree_name, 'cc').split()
 if args.cc:
     cc += args.cc
-cc = set(cc)
-
-if args.debug:
-    print("Cc: ", cc)
 
 if args.debug or args.verbose:
     print("tree URL: {}".format(config[tree_name]['url']), file=sys.stderr)
@@ -178,13 +175,18 @@ for commit in revlist:
     to = [commit.author.email]
     for line in commit.message.split('\n'):
         m = re_email.search(line);
-        if m and  m.groups:
+        if m and m.groups:
             to.append(m.groups()[0])
+        m = re_cc.search(line);
+        if m and m.groups:
+            cc.append(m.groups()[0])
 
     # convert to set which removes dups too
     to = set(to)
+    cc = set(cc)
     if args.debug:
         print("To: ", to)
+        print("Cc: ", cc)
 
     msg = MIMEText(body.encode('utf-8'), 'plain', 'utf-8')
     msg["From"] = Header("{}".format(from_name), "utf-8")
