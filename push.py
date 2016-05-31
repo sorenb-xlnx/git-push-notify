@@ -44,7 +44,7 @@ in the {branch} branch.
 Commit-ID:  {sha}
 Author:     {authorname} <{authormail}>
 AuthorDate: {adate}
-Commiter:   {committername} <{committermail}>
+Committer:  {committername} <{committermail}>
 ComitDate:  {cdate}
 URL:        {url}/commit/{sha}
 
